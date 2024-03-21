@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang = "en" xmlns:th="http://www.thymeleaf.org"> 
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title> Home </title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+ <link th:href="@{/css/home.css}" rel="stylesheet" />
+</head>
+<body>
+	  <div id="topBox">
+          <h1> Online Cryptography Tool </h1>
+          <!--<div> Hello, <span th:text="${email}" id="emailId"> </span> -->
+          <div id="innerTopBox">
+			  <h4> Hello, <span th:text="${email}" id="emailId"> </span> <span> ! </span> </h4>
+              <button onclick="logoutFunction(event)" class="btn btn-danger hoverButton"> Logout </button> 
+		  </div>
+      </div>
+      <div id="bodyBox">
+		  <div>
+		     <h3> Upload a file or Enter some text.  </h3>
+	      </div>
+	      <br>
+	      <br>
+		  <form action="/uploadFile" method="post" enctype="multipart/form-data" id="fileForm">
+			      <div class="fileInfo">
+					 <label  for="filePicker" id=""> Choose a file: ( Only .pdf,.csv,.jpeg/.jpg, .mp4 file formats will be Encrypted and Decrypted )</label>  
+			  	     <p> 
+						Note: The Encrypted and Decrypted Outputs will not be saved in the database but will be available in the C:/Users folder. 
+						Kindly make sure that a C Drive and inside C Drive Users folder exists in your device with Write and Modify permissions.
+						Also, uploaded files will be Encrypted-Decrypted using Symmetric Cryptography of AES.  
+				     </p>
+				  </div>
+				  <br>
+			      <input type="file" id="filePicker" accept="image/jpg,.pdf, .csv, .mp4" name="file" class="fileButtons">  
+			      <input type="hidden" id="email" name="email" th:value="${email}">
+			      <input type="submit" value="Submit" class="fileButtons"> 
+		  </form>
+		  <br>
+		  <br>
+		  <div id="cantEncryptBox" class="fileInfo">
+			  Remember '+', '{', '}', '[', ']', Enter Key ,'\', '|', '`', '#', '%', '^', '&' characters wont be encrypted. It will throw error.
+		  </div>
+		  <br>
+	      <form  th:object="${home}" >
+	        <textarea class="form-control input" id="inputMessage" rows="5" cols="25" th:field="*{plainText}" placeholder="Enter your plaintext message ( max 100 words )"></textarea>
+	        <br/>
+			<button th:onclick="singleEncryption( event )"  class="btn btn-success hoverButton"> Single Encryption </button>
+			<button th:onclick="hybridEncryption( event )"  class="btn btn-success hoverButton"> Hybrid Encryption </button>
+			<br/>
+			<br/>
+			<br/>
+			<textarea class="form-control output" id="outputMessage" rows="10" cols="25" th:field="*{cryptoText}" placeholder="Your encrypted output will be displayed here"></textarea>
+			<br/>
+			<textarea class="form-control input" id="inputMessageDecr" oninput="keyAdd()"  rows="5" cols="5" th:field="*{plainTextD}" placeholder="Enter your encrypted message"></textarea>
+		    <!--<input type="text" id="keyText" placeholder="Enter the key" class="">-->
+		    <br/>
+		    <button th:onclick="singleDecryption( event )"  class="btn btn-success hoverButton"> Single Decryption </button>
+		    <button th:onclick="hybridDecryption( event )"  class="btn btn-success hoverButton"> Hybrid Decryption </button>
+		    <br/>
+		    <br/>
+		    <br/>
+		    <textarea class="form-control output" id="outputMessageDecr" rows="10" cols="25" th:field="*{cryptoTextD}" placeholder="Your decrypted output will be displayed here"></textarea>
+		    <br/>
+		    <button th:onclick="saveData( event )" class="btn btn-success hoverButton" id="saveBtn"> Save </button> 
+		    <span> </span>
+		    <button th:onclick="navigateYourAccount( event )" class="btn btn-success hoverButton"> Your Activity </button>
+		    <br/>
+	      </form>     
+	  </div>
+      <script type="text/javascript" th:src="@{/js/home.js}"></script>
+</body>
+</html>

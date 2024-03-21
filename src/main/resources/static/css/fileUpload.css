@@ -1,0 +1,57 @@
+body{
+	padding: 0 0 1rem 0;
+}
+#topBox{
+	display: flex;
+	justify-content:space-between;
+	align-items: center;
+	height: 7rem;
+	width: 100%;
+	background-color: #FFD4B2;
+	padding: 1rem 2rem 1rem 2rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1; 
+}
+#innerTopBox{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 28rem;
+}
+#bodyBox{
+    position: relative;	
+    background-color: #FFE6E6;
+    margin: 16rem 1rem 1rem 1rem;
+    padding: 4rem;
+    border-radius: 23px;
+    width: 90rem;
+}
+#bodyBox::before{
+	content: "";
+	background-color: white;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100.5%;
+	z-index: -1;
+}
+#fileInfo{
+	background-color: #FEC7B4;
+	font-family: monospace;
+	border: 0.5rem double black;
+	padding: 0.5rem;
+}
+#bodyBox h3{
+	text-align:left;
+	margin: -1rem 1rem 1.5rem 0;
+	font-family: monospace;	
+}
+.topButtons{
+	font-size: larger;
+}
+.topButtons:hover{
+	 box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}

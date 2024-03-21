@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang = "en" xmlns:th="http://www.thymeleaf.org"> 
+<html>	
+<head>
+<meta charset="ISO-8859-1">
+<title> Login </title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<link th:href="@{/css/login.css}" rel="stylesheet" />
+</head>
+<body>
+
+    <nav id="headingTitleBox" class="navbar bg-body-tertiary">
+      <div id="headingTitle" class="container-fluid">
+        <span class="navbar-brand mb-0 h1"> Online  Cryptography  Tool </span>
+      </div>
+    </nav>
+    
+    <div class="container">
+	    <div class="row">
+		  <div class="col-md-6 col-md-offset-3" id="thirdBox">
+			   <h1> User Login Form </h1><!--
+               <form th:action="@{/login}" method="post" th:object="${login}" >-->
+			   <form action="/login" method="post" th:object="${login}">
+					<!--<<div th:if "${error}" >
+					    <div class="alert alert-info" th:text="${error}"> Invalid username or password </div>
+				    </div>
+				
+				    <div th:if "${logout}" >
+					    <div  class="alert alert-info" th:text="${logout}"> You have been logout </div>
+				    </div> --> 
+				    <div class="form-group">
+			            <label class="control-label" for="email"> Email </label>:
+			            <input id="email" class="form-control" th:field="*{email}" placeholder="Enter Email ID" required autofocus="autofocus"/>
+		            </div>
+                    <div class="form-group">
+			            <label class="control-label" for="password"> Password </label>:
+			            <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="Enter Password" required autofocus="autofocus"/>
+		            </div>
+		      
+		
+                    <div class="form-group" id="lastBox">
+		                <button type="submit" class="btn btn-success hoverButton" onclick="forNavigationHome(event)"> Login </button>
+		                <span> Not a User? <a th:href="@{/register}"> Register here </a> </span>
+		            </div> 
+		        </form>      
+			</div>
+		</div>	
+	</div> 
+	
+</body>
+</html>

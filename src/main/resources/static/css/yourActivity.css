@@ -1,0 +1,77 @@
+@charset "ISO-8859-1";
+body{
+	padding: 0 0 1rem 0;
+}
+#topBox{
+	display: flex;
+	justify-content:space-between;
+	align-items: center;
+	height: 7rem;
+	width: 100%;
+	background-color: #FFD4B2;
+	padding: 1rem 2rem 1rem 2rem;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1; 
+}
+#innerTopBox{
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	width: 28rem;
+}
+.topButtons{
+	font-size: larger;
+}
+.topButtons:hover{
+	 box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+#bodyBox{
+    position: relative;	
+    background-color: #FFE6E6;
+    margin: 9rem 1rem 1rem 1rem;
+    padding: 2rem;
+    border-radius: 23px;
+    width: 6530px;
+}
+#bodyBox::before{
+	content: "";
+	background-color: white;
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100.5%;
+	z-index: -1;
+}
+#bodyBox h2{
+	text-align:left;
+	margin: -1rem 1rem 3.5rem 0;
+}
+#tableContainer{
+	height: 20rem;
+	width: 6450px;
+}
+.noActivityClass{
+	font-family: monospace;
+	height: 5rem;
+	background-color: #FEC7B4;
+	width: 85rem;
+	border-radius: 23px;
+	text-align: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 0.5rem double black;
+}
+.tableCellStyle{
+	width: 5rem;
+	border: 1.3px solid black;
+	text-align: center;
+}
+.tableHeaderStyle{
+    border: 2px solid black;
+    text-align: center;	
+    
+}

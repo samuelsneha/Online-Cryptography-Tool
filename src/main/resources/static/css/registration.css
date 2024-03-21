@@ -1,0 +1,47 @@
+@charset "ISO-8859-1";
+body{
+	background-color: #FEECE2;
+}
+#headingTitleBox{
+	height: 8rem;
+	background-color: #FFD4B2 !important;
+}
+#headingTitleBox span{
+	font-size: 3.5rem;
+}
+#headingTitle{
+	justify-content: center;
+}
+.container{
+	display: flex;
+	height: 39rem;
+}
+.row{
+	height: 39rem;
+	width:920px;
+	justify-content: end;
+	align-items:center;
+}
+.row h1{
+	margin-left: 0.5rem;
+	margin-top: 1rem;
+}
+.form-group{
+	margin-top: 1rem;
+}
+#thirdBox{
+	margin: 2rem 1.5rem 1.5rem 1.5rem;
+	padding: 1rem 2rem 5.5rem 2rem;
+	border: 5px double;
+	border-radius: 25px;
+	width: 32rem;
+}
+#thirdBox #lastBox span{
+	font-size: 17px;
+}
+#thirdBox #lastBox span a{
+	text-decoration: none;
+}
+.hoverButton:hover{
+box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
