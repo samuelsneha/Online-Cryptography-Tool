@@ -36,6 +36,6 @@ public class FileUtils {
         } catch (IOException e) {
             return MimeTypes.OCTET_STREAM;
         }
-    }
+	}
 
 }
