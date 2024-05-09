@@ -3,10 +3,13 @@ package com.cgtmse.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cgtmse.entity.Input;
 import com.cgtmse.service.cryptoService;
 
 @RestController
@@ -52,39 +55,39 @@ public class backendControler {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
-	@GetMapping("/firstEncryption")
-	public String firstEncryption( @RequestParam String variable ){
+	@PostMapping("/firstEncryption")
+	public String firstEncryption( @RequestBody Input variable ){
 		cryptoservice.createRSAKeys();
 		//String resutSingleEncryption = cryptoservice.firstEncryption( variable );
-		String resutSingleEncryption = cryptoservice.hybridEncryption( variable );
+		String resutSingleEncryption = cryptoservice.hybridEncryption( variable.getText() ); //AES
 		return resutSingleEncryption;
 	}
 	
-	@GetMapping("/hybridEncryption")
-	public String hybridEncryption( @RequestParam String variable ) {
+	@PostMapping("/hybridEncryption")
+	public String hybridEncryption( @RequestBody Input variable ) {
 		cryptoservice.createRSAKeys();
-		String resutSingleEncryption = cryptoservice.hybridEncryption( variable );
+		String resutSingleEncryption = cryptoservice.hybridEncryption( variable.getText() ); //AES
 		System.out.println( " is the result of single encryption " +resutSingleEncryption);
-		String resultHybridEncryption = cryptoservice.firstEncryption(resutSingleEncryption );
+		String resultHybridEncryption = cryptoservice.firstEncryption(resutSingleEncryption ); //RSA
 		System.out.println( " is the result of hybrid encryption " +resultHybridEncryption);
 		return resultHybridEncryption;
 	}
 	
-	@GetMapping("/firstDecryption")
-	public String firstDecryption( @RequestParam String variable ) {
+	@PostMapping("/firstDecryption")
+	public String firstDecryption( @RequestBody Input variable ) {
 		//cryptoservice.createRSAKeys();
-		String resultSingleEncryption = cryptoservice.firstDecryption(variable);
+		String resultSingleEncryption = cryptoservice.firstDecryption(variable.getText()); //AES
 		return resultSingleEncryption;
 		
 	}
 
-	@GetMapping( "/hybridDecryption")
-	public String hybridDecryption( @RequestParam String variable ) {
+	@PostMapping( "/hybridDecryption")
+	public String hybridDecryption( @RequestBody Input variable ) {
 		System.out.println( "variable is "+variable);
 //		cryptoservice.createRSAKeys();	
-		String resultSingleDecryption = cryptoservice.hybridDecryption(variable);
+		String resultSingleDecryption = cryptoservice.hybridDecryption(variable.getText()); //RSA
 		System.out.println( " is the result of hybrid decryption " +resultSingleDecryption);
-		String resultHybridDecryption = cryptoservice.firstDecryption(resultSingleDecryption);
+		String resultHybridDecryption = cryptoservice.firstDecryption(resultSingleDecryption); //AES
 		System.out.println( " is the result of single decryption " +resultHybridDecryption);
 		return resultHybridDecryption;
 	}

@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -25,8 +28,16 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.cgtmse.utils.FileUtils;
 
 @Service
 public class cryptoServiceImpl implements cryptoService{
@@ -206,11 +217,12 @@ public class cryptoServiceImpl implements cryptoService{
 	@Override
 	public String firstDecryption( String message ) {
 		String decryptAES=""; 
+		System.out.println("message in decry is "+message);
 		try {
-			message=message.replaceAll(" ", "+");
+	//		message=message.replaceAll(" ", "+");
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); 
 		    cipher.init(Cipher.DECRYPT_MODE, generateKey(secret), generateIv(IVS) );
-		    byte[] decrypt2 = cipher.doFinal(Base64.getDecoder().decode(message.trim().getBytes()));
+		    byte[] decrypt2 = cipher.doFinal(Base64.getMimeDecoder().decode(message.trim().getBytes()));
 		    decryptAES = new String( decrypt2, "UTF-8");
 	        System.out.println( "AES decrypt is "+decryptAES);
 			
@@ -223,6 +235,7 @@ public class cryptoServiceImpl implements cryptoService{
 //			  System.out.println("RSA Decrypt is "+decryptRSA);	
 		}catch( Exception e ) {
 			System.out.println( e +"error in AES decryption" );
+			 e.printStackTrace();
 		}
 		return decryptAES;
 		//return decryptRSA;
@@ -231,13 +244,13 @@ public class cryptoServiceImpl implements cryptoService{
     @Override
     public String hybridDecryption( String message ) {
     	try {
-    		message=message.replaceAll(" ", "+");
- //   		  System.out.println ( " message is "+message);
+    		//message=message.replaceAll(" ", "+");
+    		  System.out.println ( " message is "+message);
 			  Cipher cipher = Cipher.getInstance("RSA");
 			  cipher.init(Cipher.DECRYPT_MODE,privatekey );		
 			  System.out.println("*****" +privatekey.toString());
 //			  System.out.println ( privatekey );
-			  byte[] decrypt2 = cipher.doFinal(Base64.getDecoder().decode(message.getBytes(StandardCharsets.UTF_8)));
+			  byte[] decrypt2 = cipher.doFinal(Base64.getMimeDecoder().decode(message.getBytes()));
 //			  System.out.println( decrypt2 +" is decrypt2");
 			  decryptRSA = new String(decrypt2, "UTF-8");
 			  System.out.println("RSA Decrypt is "+decryptRSA);	
@@ -255,11 +268,34 @@ public class cryptoServiceImpl implements cryptoService{
     }
     
     @Override
-	public String encryptAESFile(byte[] bytesArray, String fileType ) throws IOException, NoSuchPaddingException,
+	public ResponseEntity<?> encryptAESFile(byte[] bytesArray, String fileType, RedirectAttributes redirAttrs ) throws IOException, NoSuchPaddingException,
     NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException,
     BadPaddingException, IllegalBlockSizeException{
 		//File file = new File("C:\\Users\\SNEHA SAMUEL\\Documents\\workspace-spring-tool-suite-4-4.20.0.RELEASE\\firstStage\\src\\main\\resources\\Outputs\\Encrypted Outputs\\encryptedPDF.txt");
-		try {
+    	try {
+			if( fileType.equalsIgnoreCase("application/pdf")) {
+				System.out.println( " its pdf ");
+				//decryptAESFile( fileType, redirAttrs );
+			} 
+			else if( fileType.equalsIgnoreCase("text/plain") ) {
+				System.out.println( " its csv ");
+				//decryptAESFile( fileType, redirAttrs );
+			}
+			else if( fileType.equalsIgnoreCase("image/jpeg") ) {
+				System.out.println( " its jpeg ");
+				//decryptAESFile( fileType, redirAttrs );
+			}
+			else if( fileType.equalsIgnoreCase("video/quicktime")) {
+				System.out.println( " its mp4 ");
+				//decryptAESFile( fileType, redirAttrs );
+			}
+			else {
+				System.out.println( " none of it matched"); //? throw some alert or flash when this is matched
+				System.out.println(fileType);
+				//File blank = new File("blank.txt");
+				redirAttrs.addFlashAttribute("failure", "Invalid file type: " + fileType);
+					return ResponseEntity.badRequest().body("Uncupported File format");
+			}
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); //AES/CBC/PKCS5Padding
 		    cipher.init(Cipher.ENCRYPT_MODE, generateKey(secret), generateIv(IVS) );
 		    //FileInputStream inputStream = new FileInputStream("C:\\Users\\SNEHA SAMUEL\\Documents\\workspace-spring-tool-suite-4-4.20.0.RELEASE\\firstStage\\src\\main\\resources\\sample.pdf");
@@ -267,88 +303,150 @@ public class cryptoServiceImpl implements cryptoService{
 		    //System.out.println(" and temp in encrypton is "+temp);
 		    byte[] encrypt = cipher.doFinal(bytesArray);	
 			String result =  new String(Base64.getEncoder().encodeToString(encrypt));
-			System.out.println( "encryption of pdf is " +result); //jpg -> bytes ->string
-			File file = new File("C:\\Users\\EncryptedOutput.txt");
+			System.out.println( "encryption of file is " +result); //jpg -> bytes ->string
+//			Path path = Paths.get("EncryptedOutput.txt");
+//			Files.createFile(path);
+			File file = new File("EncryptedOutput.txt");
+			//File file = new File("C:\\Users\\EncryptedOutput.txt");
+	    	InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 			FileWriter writer1 = new FileWriter(file);
 			writer1.write(result);
 			writer1.close();
 			//inputStream.close();
-			if( fileType.equalsIgnoreCase("application/pdf")) {
-				System.out.println( " its pdf ");
-				decryptAESFile( fileType );
-			} 
-			else if( fileType.equalsIgnoreCase("text/csv") ) {
-				System.out.println( " its csv ");
-				decryptAESFile( fileType );
-			}
-			else if( fileType.equalsIgnoreCase("image/jpeg") ) {
-				System.out.println( " its jpeg ");
-				decryptAESFile( fileType );
-			}
-			else if( fileType.equalsIgnoreCase("video/mp4")) {
-				System.out.println( " its mp4 ");
-				decryptAESFile( fileType );
-			}
-			else {
-				System.out.println( " none of it matched"); //? throw some alert or flash when this is matched
-				System.out.println(fileType);
-			}
+			
+			HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentDisposition(
+                    ContentDisposition.builder("attachment")
+                                      .filename("EncryptedFile.txt").build());
+			 return ResponseEntity.ok()
+			            .contentLength(file.length())
+			            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+			            .headers(httpHeaders)
+			            .body(resource);
+			 
 		}catch( Exception e ) {
+			e.printStackTrace();
+			File file = new File("new.txt");
+			InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 			System.out.println( e );
+			HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentDisposition(
+                    ContentDisposition.builder("attachment")
+                                      .filename(file.getName()).build());
+			return ResponseEntity.ok()
+			            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+			            .body(resource);
 		}
-		return "ok";
+		//return "ok";
 	}
     
 //    @Override
-	public String decryptAESFile( String fileType ) throws IOException, NoSuchPaddingException,
+	public ResponseEntity<?> decryptAESFile( byte[] bytesArray, String fileType, RedirectAttributes redirAttrs  ) throws IOException, NoSuchPaddingException,
     NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException,
     BadPaddingException, IllegalBlockSizeException {
     	try {
-    		File file1 = new File("C:\\Users\\DecryptedOutput.pdf");//? what if this position is not available
-    		File file2 = new File("C:\\Users\\DecryptedOutput.csv");
-    		File file3 = new File("C:\\Users\\DecryptedOutput.jpg");
-    		File file4 = new File("C:\\Users\\DecryptedOutput.mp4");
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); //AES/CBC/PKCS5Padding
+    		if( fileType != "text/plain") {
+    			System.out.println("%%%%%NOT SUPPORTED&&&&");
+    			redirAttrs.addFlashAttribute("failure", "Invalid file type: " + fileType);
+				return ResponseEntity.badRequest().body("Uncupported File format");
+    		}
+    		File file1 = new File("DecryptedOutput.pdf");//? what if this position is not available
+    		File file2 = new File("DecryptedOutput.csv");
+    		File file3 = new File("DecryptedOutput.jpg");
+    		File file4 = new File("DecryptedOutput.mp4");
+    		Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding"); //AES/CBC/PKCS5Padding
 		    cipher.init(Cipher.DECRYPT_MODE, generateKey(secret), generateIv(IVS) );
-		    FileInputStream inputStream = new FileInputStream("C:\\Users\\EncryptedOutput.txt");
-		    byte[] temp = inputStream.readAllBytes();
-		    System.out.println( " and temp in decryption is " +temp);
-	        byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(temp));
-	        System.out.println("plainText is "+plainText);
-	        //String decryptAES =  new String(plainText,"UTF-8");
-	        //System.out.println( "result is "+decryptAES);
-	        if( fileType.equalsIgnoreCase("application/pdf")) {
+		    byte[] plainText = cipher.doFinal(Base64.getDecoder().decode(bytesArray));
+		    String result = new String (plainText) ;
+//		    File file = new File("DecryptedOutput");
+//			FileWriter writer1 = new FileWriter(file);
+//			writer1.write(result);
+//			writer1.close();
+			fileType = FileUtils.getRealMimeType(plainText);
+		    if( fileType.equalsIgnoreCase("application/pdf")) { //pdf
 				System.out.println( " its pdf ");
-		        FileOutputStream output = new FileOutputStream(file1);
-		        output.write(plainText);
-			    inputStream.close();
+		        
+		        HttpHeaders httpHeaders = new HttpHeaders();
+	            httpHeaders.setContentDisposition(
+	                    ContentDisposition.builder("attachment")
+	                                      .filename("DecryptedOutput.pdf").build());
+				return ResponseEntity.ok()
+				            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+				            .headers(httpHeaders)
+				            .body(plainText);
+
 			} 
-			else if( fileType.equalsIgnoreCase("text/csv") ) {
-				System.out.println( " its csv ");
-		        FileOutputStream output = new FileOutputStream(file2);
-		        output.write(plainText);
-			    inputStream.close();
-			}
-			else if( fileType.equalsIgnoreCase("image/jpeg") ) {
-				System.out.println( " its jpeg ");
-		        FileOutputStream output = new FileOutputStream(file3);
-		        output.write(plainText);
-			    inputStream.close();
-			}
-			else if( fileType.equalsIgnoreCase("video/mp4") ) {
+		    else if( fileType.equalsIgnoreCase("video/quicktime")) { //mp4
 				System.out.println( " its mp4 ");
 		        FileOutputStream output = new FileOutputStream(file4);
 		        output.write(plainText);
-			    inputStream.close();
+		        HttpHeaders httpHeaders = new HttpHeaders();
+	            httpHeaders.setContentDisposition(
+	                    ContentDisposition.builder("attachment")
+	                                      .filename("DecryptedOutput.mp4").build());
+				return ResponseEntity.ok()
+				            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+				            .headers(httpHeaders)
+				            .body(plainText);
+			} 
+		    else if( fileType.equalsIgnoreCase("image/jpeg")) { //jpg
+				System.out.println( " jpeg ");
+		        FileOutputStream output = new FileOutputStream(file3);
+		        output.write(plainText);
+		        HttpHeaders httpHeaders = new HttpHeaders();
+	            httpHeaders.setContentDisposition(
+	                    ContentDisposition.builder("attachment")
+	                                      .filename("DecryptedOutput.jpg").build());
+				return ResponseEntity.ok()
+				            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+				            .headers(httpHeaders)
+				            .body(plainText);
+
+			} 
+		    else if( fileType.equalsIgnoreCase("text/plain")) { //csv
+				System.out.println( " csv ");
+		        FileOutputStream output = new FileOutputStream(file2);
+		        output.write(plainText);
+		        HttpHeaders httpHeaders = new HttpHeaders();
+	            httpHeaders.setContentDisposition(
+	                    ContentDisposition.builder("attachment")
+	                                      .filename("DecryptedOutput.csv").build());
+				return ResponseEntity.ok()
+				            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+				            .headers(httpHeaders)
+				            .body(plainText);
+
 			}
-			else {
-				System.out.println( " none of it matched. So no decryption");
-				System.out.println(fileType);
-			}
-		}catch( Exception e ) {
-			System.out.println( e );
-		}
-		return "ok";
+		    //else {
+//				System.out.println( " none of it matched. So no decryption");
+//				System.out.println(fileType);
+//				HttpHeaders httpHeaders = new HttpHeaders();
+//	            httpHeaders.setContentDisposition(
+//	                    ContentDisposition.builder("attachment")
+//	                                      .filename("new.txt").build());
+//				 return ResponseEntity.badRequest()
+//				            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+//				            .headers(httpHeaders)
+//				            .body(result.getBytes());
+				redirAttrs.addFlashAttribute("failure", "Invalid file type: " + fileType);
+				return ResponseEntity.badRequest().body("Uncupported File format");
+
+		//	}
+		    
+    	}catch( Exception e ) {
+    		File file = new File("new.txt");
+    		String s = "";
+    		HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setContentDisposition(
+                    ContentDisposition.builder("attachment")
+                                      .filename("new.txt").build());
+			 return ResponseEntity.badRequest()
+			       
+			            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+			            .headers(httpHeaders)
+			            .body(s.getBytes());
+    		
+    	}
     }
     
     

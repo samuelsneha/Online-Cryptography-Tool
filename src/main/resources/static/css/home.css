@@ -3,6 +3,19 @@
 body{
 	padding: 0rem 0rem 1rem 0rem;
 }
+.toast{
+	display: block !important;
+	width: 100%;
+	font:19px sans-serif;
+}
+.flash{
+	width: 100%;
+	text-align: center;
+	z-index: 5;
+	position: fixed;
+	top: 7rem;
+	background-color: springgreen;
+}
 #topBox{
 	display: flex;
 	justify-content:space-between;
@@ -20,7 +33,7 @@ body{
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	width: 22rem;
+	width: 35rem;
 }
 .btn-danger{
 	font-size: larger;

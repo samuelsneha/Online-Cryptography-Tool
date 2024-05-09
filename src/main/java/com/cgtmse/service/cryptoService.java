@@ -9,6 +9,10 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 public interface cryptoService {
 	
 	public void createRSAKeys();
@@ -23,6 +27,10 @@ public interface cryptoService {
     NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException,
     BadPaddingException, IllegalBlockSizeException;
 	
+	public ResponseEntity<?> decryptAESFile( byte[] bytesArray, String fileType, RedirectAttributes redirAttrs ) throws IOException, NoSuchPaddingException,
+    NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException,
+    BadPaddingException, IllegalBlockSizeException;
+	
 	public String decryptRSAData();
 	
 	String firstEncryption( String message );
@@ -33,7 +41,7 @@ public interface cryptoService {
 	
 	String hybridDecryption(  String message );
 	
-	public String encryptAESFile( byte[] bytesArray, String fileType ) throws IOException, NoSuchPaddingException,
+	public ResponseEntity<?> encryptAESFile( byte[] bytesArray, String fileType, RedirectAttributes redirAttrs ) throws IOException, NoSuchPaddingException,
     NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException,
     BadPaddingException, IllegalBlockSizeException;
 	

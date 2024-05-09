@@ -19,7 +19,7 @@ body{
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	width: 28rem;
+	width: 35rem;
 }
 .topButtons{
 	font-size: larger;

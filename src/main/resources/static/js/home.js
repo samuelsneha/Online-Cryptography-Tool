@@ -16,6 +16,14 @@ let singleEncryptionOutput, hybridEncryptionOutput, singleDecryptionOutput, hybr
 let firstTime = true;
 let sessionStart = false, sessionEnd = false, hybridEncryptionFlag = false;
 
+let flash = document.getElementById('flash1');
+let closeButton = document.getElementById('toastCloseBttn1');
+
+closeButton.addEventListener('click', function() {
+	console.log( 'close 1 clicked ');
+	flash.style.display = 'none';
+});
+
 function singleEncryption( event ){
 	event.preventDefault();	
 	firstTime = true;
@@ -30,7 +38,8 @@ function singleEncryption( event ){
 		sessionStart = true;
 		var originalMessage = inputMessageVar.value;
 		console.log(originalMessage);
-	    var url1 = "/hybrid/firstEncryption?variable="+originalMessage;
+	    //var url1 = "/hybrid/firstEncryption?variable="+originalMessage;
+	    var url1 = "/hybrid/firstEncryption";
         const xhttp = new XMLHttpRequest(); //We could have also used fetch API instead of xhr object
         xhttp.onreadystatechange = function () {
 	         if (xhttp.readyState === XMLHttpRequest.DONE) {
@@ -44,9 +53,24 @@ function singleEncryption( event ){
 	            }
 	         }
         };
-        xhttp.open("GET", url1, true);
-	    xhttp.send();
+        const body = JSON.stringify({
+		  text: originalMessage
+        });
+        xhttp.open("POST", url1, true);
+        xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+	    xhttp.send(body);
+	/*    fetch("/hybrid/firstEncryption", {
+               method: "POST",
+               body: JSON.stringify({
+               text: originalMessage,
+        }),
+		  headers: {
+		    "Content-type": "application/json; charset=UTF-8"
+		  }
+        }).then((response) => console.log(response.text())); */
+        
      } 
+     
 }     
 
 function hybridEncryption( event ){
@@ -64,7 +88,8 @@ function hybridEncryption( event ){
 		sessionStart = true;
 		var originalMessage = inputMessageVar.value;
 		console.log(originalMessage);
-		var url2 = "/hybrid/hybridEncryption?variable="+originalMessage;
+		//var url2 = "/hybrid/hybridEncryption?variable="+originalMessage;
+		var url2 = "/hybrid/hybridEncryption";
 		const xhttp = new XMLHttpRequest(); //We could have also used fetch API instead of xhr object
 		xhttp.onreadystatechange = function () {
 	         if (xhttp.readyState === XMLHttpRequest.DONE) {
@@ -78,8 +103,14 @@ function hybridEncryption( event ){
 	            }
 	         }
         };
-        xhttp.open("GET", url2, true);
-	    xhttp.send();
+//  xhttp.open("GET", url2, true);
+//  xhttp.send();
+	    const body = JSON.stringify({
+		  text: originalMessage
+        });
+        xhttp.open("POST", url2, true);
+        xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+	    xhttp.send(body);
 	}	
 }
 
@@ -116,7 +147,8 @@ function singleDecryption( event ){
 //		var key =  keyInput.value;
 		console.log(decryptedMessage );
 //		console.log( key );
-		var url3 = "/hybrid/firstDecryption?variable="+decryptedMessage;
+//		var url3 = "/hybrid/firstDecryption?variable="+decryptedMessage;
+		var url3 = "/hybrid/firstDecryption";
 		const xhttp = new XMLHttpRequest(); //We could have also used fetch API instead of xhr object
 		xhttp.onreadystatechange = function () {
 	         if (xhttp.readyState === XMLHttpRequest.DONE) {
@@ -130,8 +162,14 @@ function singleDecryption( event ){
 	             }
 	         }
         };
-        xhttp.open("GET", url3, true);
-	    xhttp.send();
+//        xhttp.open("GET", url3, true);
+//	    xhttp.send();
+         const body = JSON.stringify({
+		   text: decryptedMessage
+         });
+        xhttp.open("POST", url3, true);
+        xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+	    xhttp.send(body);
 	}	
 }
 
@@ -152,7 +190,7 @@ function hybridDecryption( event ){
 		    }
 			var decryptedMessage = inputMessageDecr.value;
 			console.log(decryptedMessage);
-			var url4 = "/hybrid/hybridDecryption?variable="+decryptedMessage;
+			var url4 = "/hybrid/hybridDecryption";
 			const xhttp = new XMLHttpRequest(); //We could have also used fetch API instead of xhr object
 			xhttp.onreadystatechange = function () {
 		         if (xhttp.readyState === XMLHttpRequest.DONE) {
@@ -166,8 +204,14 @@ function hybridDecryption( event ){
 		            }
 		         }
 	        };
-	        xhttp.open("GET", url4, true);
-		    xhttp.send();
+//	        xhttp.open("GET", url4, true);
+//		    xhttp.send();
+         const body = JSON.stringify({
+		    text: decryptedMessage
+         });
+        xhttp.open("POST", url4, true);
+        xhttp.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+	    xhttp.send(body);
 		}	
 	   
 	}

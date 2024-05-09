@@ -1,6 +1,21 @@
 body{
 	background-color: #FEECE2;
 }
+.flash{
+	z-index: 5;
+}
+.toast{
+	display: block !important;
+	width: 100%;
+	font: 17px sans-serif;
+	text-align: center;
+}
+.goodflash{
+	background-color: aquamarine;
+}
+.badflash{
+	background-color: pink;
+}
 #headingTitleBox{
 	height: 8rem;
 	background-color: #FFD4B2 !important;

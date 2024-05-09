@@ -8,6 +8,8 @@
  <link th:href="@{/css/home.css}" rel="stylesheet" />
 </head>
 <body>
+	<!--registration form -->
+
 	  <div id="topBox">
           <h1> Online Cryptography Tool </h1>
           <!--<div> Hello, <span th:text="${email}" id="emailId"> </span> -->
@@ -16,7 +18,20 @@
               <button onclick="logoutFunction(event)" class="btn btn-danger hoverButton"> Logout </button> 
 		  </div>
       </div>
+      <!-- Flashes -->
+	  <div th:if="${passwordsmatched}" role="alert" class="flash" id="flash1">
+		 <!--<div class="alert alert-success" th:text="${newusercreated}">  </div> -->
+		 <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" >
+		    <div class="toast-header">
+			    <button type="button" class="btn-close" id="toastCloseBttn1" data-bs-dismiss="toast" aria-label="Close"></button>
+		    </div>
+		    <div class="toast-body" th:text="${passwordsmatched}"> </div>
+		 </div>
+	  </div>
+	  
       <div id="bodyBox">
+		  <br>
+		  <br>
 		  <div>
 		     <h3> Upload a file or Enter some text.  </h3>
 	      </div>
@@ -24,35 +39,49 @@
 	      <br>
 		  <form action="/uploadFile" method="post" enctype="multipart/form-data" id="fileForm">
 			      <div class="fileInfo">
-					 <label  for="filePicker" id=""> Choose a file: ( Only .pdf,.csv,.jpeg/.jpg, .mp4 file formats will be Encrypted and Decrypted )</label>  
+					 <label  for="filePicker" id=""> Choose a file to Encrypt: ( Only .pdf,.csv,.jpeg/.jpg, .mp4 file formats are allowed )</label>  
 			  	     <p> 
-						Note: The Encrypted and Decrypted Outputs will not be saved in the database but will be available in the C:/Users folder. 
-						Kindly make sure that a C Drive and inside C Drive Users folder exists in your device with Write and Modify permissions.
-						Also, uploaded files will be Encrypted-Decrypted using Symmetric Cryptography of AES.  
+						Note: The uploaded file will be Encrypted-Decrypted using the Symmetric Encryption Algorithm only. After Encryption/Decryption, the Encrypted File as well as the Decrypted File will be automatically downloaded in your device.    
 				     </p>
 				  </div>
 				  <br>
-			      <input type="file" id="filePicker" accept="image/jpg,.pdf, .csv, .mp4" name="file" class="fileButtons">  
+			      <input type="file" id="filePicker" accept=".jpg, .jpeg, .pdf, .csv, .mp4" name="file" class="fileButtons" required>  
+			      <input type="hidden" id="email" name="email" th:value="${email}">
+			      <input type="submit" value="Submit" class="fileButtons"> 
+		  </form>
+		  <br>
+		  <form action="/decryptUploadFile" method="post" enctype="multipart/form-data" id="fileForm" >
+			     <div class="fileInfo">
+					 <label for="filePickerEncrypt">Choose a file to Decrypt </label>
+					 <p>
+						 Note: Only .txt files are allowed
+					 </p>
+				  </div>
+				  <br>
+			     
+			      <input type="file" id="filePickerEncrypt" accept=".txt" name="file" class="fileButtons" required>  
 			      <input type="hidden" id="email" name="email" th:value="${email}">
 			      <input type="submit" value="Submit" class="fileButtons"> 
 		  </form>
 		  <br>
 		  <br>
 		  <div id="cantEncryptBox" class="fileInfo">
-			  Remember '+', '{', '}', '[', ']', Enter Key ,'\', '|', '`', '#', '%', '^', '&' characters wont be encrypted. It will throw error.
+			 <!-- Remember '+', '{', '}', '[', ']', Enter Key ,'\', '|', '`', '#', '%', '^', '&' characters wont be encrypted. It will throw error in case of both single encryption ( AES ) as well hybrid encryption ( AES and then RSA ). -->
+			 Kindly enter the message you want to encrypt. 
+			 <p> Note: Text Encryption Decryption will happen using Hybrid Cryptography. </p>
 		  </div>
 		  <br>
 	      <form  th:object="${home}" >
-	        <textarea class="form-control input" id="inputMessage" rows="5" cols="25" th:field="*{plainText}" placeholder="Enter your plaintext message ( max 100 words )"></textarea>
+	        <textarea class="form-control input" id="inputMessage" rows="5" cols="25" th:field="*{plainText}" placeholder="Enter your message"></textarea>
 	        <br/>
 			<button th:onclick="singleEncryption( event )"  class="btn btn-success hoverButton"> Single Encryption </button>
 			<button th:onclick="hybridEncryption( event )"  class="btn btn-success hoverButton"> Hybrid Encryption </button>
 			<br/>
 			<br/>
 			<br/>
-			<textarea class="form-control output" id="outputMessage" rows="10" cols="25" th:field="*{cryptoText}" placeholder="Your encrypted output will be displayed here"></textarea>
+			<textarea class="form-control output" id="outputMessage" rows="10" cols="25" th:field="*{cryptoText}" placeholder="Your Encrypted Output (Ciphertext) will be displayed here"></textarea>
 			<br/>
-			<textarea class="form-control input" id="inputMessageDecr" oninput="keyAdd()"  rows="5" cols="5" th:field="*{plainTextD}" placeholder="Enter your encrypted message"></textarea>
+			<textarea class="form-control input" id="inputMessageDecr" oninput="keyAdd()"  rows="5" cols="5" th:field="*{plainTextD}" placeholder="Enter your encrypted message "></textarea>
 		    <!--<input type="text" id="keyText" placeholder="Enter the key" class="">-->
 		    <br/>
 		    <button th:onclick="singleDecryption( event )"  class="btn btn-success hoverButton"> Single Decryption </button>
@@ -60,7 +89,7 @@
 		    <br/>
 		    <br/>
 		    <br/>
-		    <textarea class="form-control output" id="outputMessageDecr" rows="10" cols="25" th:field="*{cryptoTextD}" placeholder="Your decrypted output will be displayed here"></textarea>
+		    <textarea class="form-control output" id="outputMessageDecr" rows="10" cols="25" th:field="*{cryptoTextD}" placeholder="Your Decrypted output (Plaintext) will be displayed here"></textarea>
 		    <br/>
 		    <button th:onclick="saveData( event )" class="btn btn-success hoverButton" id="saveBtn"> Save </button> 
 		    <span> </span>
@@ -68,6 +97,7 @@
 		    <br/>
 	      </form>     
 	  </div>
+	  
       <script type="text/javascript" th:src="@{/js/home.js}"></script>
 </body>
 </html>

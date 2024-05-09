@@ -57,7 +57,7 @@ public class SecurityConfig {
 //             // Allow everyone to access these pages
 //            .anyRequest().authenticated()
 //            .and()
-			.authorizeHttpRequests( auth -> auth.requestMatchers("/register", "/login", "/home", "/hybrid/firstEncryption", "/hybrid/hybridEncryption" , "/save/saveData", "/hybrid/firstDecryption", "/hybrid/hybridDecryption" , "/redirectToActivity", "/save/saveData", "/home*" ,"/uploadFile" ,"/registration*" , "/save/showTable" ,"/login**","/css/**", "/js/**", "/yourActivity" ).permitAll()
+			.authorizeHttpRequests( auth -> auth.requestMatchers("/register", "/login", "/home", "/hybrid/firstEncryption", "/hybrid/hybridEncryption" , "/save/saveData", "/hybrid/firstDecryption", "/hybrid/hybridDecryption" , "/redirectToActivity", "/save/saveData", "/home*" ,"/uploadFile", "/decryptUploadFile" ,"/registration*" , "/save/showTable" ,"/login**","/css/**", "/js/**", "/yourActivity" ).permitAll()
 			                                    .anyRequest().authenticated())
 			                                   // .and())                                   
 //			.formLogin( form -> form.loginPage("/login")

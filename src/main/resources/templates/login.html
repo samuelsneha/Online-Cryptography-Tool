@@ -14,6 +14,26 @@
         <span class="navbar-brand mb-0 h1"> Online  Cryptography  Tool </span>
       </div>
     </nav>
+    <!-- flashes -->
+	<div th:if="${newusercreated}" role="alert" class="flash" id="flash1">
+		<!--<div class="alert alert-success" th:text="${newusercreated}">  </div> -->
+		<div class="toast goodflash" role="alert" aria-live="assertive" aria-atomic="true" >
+		   <div class="toast-header">
+			    <button type="button" class="btn-close toastCloseBtn" id="toastCloseBttn1" data-bs-dismiss="toast" aria-label="Close"></button>
+		   </div>
+		   <div class="toast-body" th:text="${newusercreated}"> </div>
+		</div>
+	</div>
+	
+	<div th:if="${passwordsdidntmatched}" role="alert" class="flash" id="flash2">
+		<!--<div class="alert alert-success" th:text="${newusercreated}">  </div> -->
+		<div class="toast badflash" role="alert" aria-live="assertive" aria-atomic="true" >
+		   <div class="toast-header">
+			    <button type="button" class="btn-close toastCloseBtn" id="toastCloseBtn2" data-bs-dismiss="toast" aria-label="Close"></button>
+		   </div>
+		   <div class="toast-body" th:text="${passwordsdidntmatched}"> </div>
+		</div>
+	</div>
     
     <div class="container">
 	    <div class="row">
@@ -30,7 +50,7 @@
 				    </div> --> 
 				    <div class="form-group">
 			            <label class="control-label" for="email"> Email </label>:
-			            <input id="email" class="form-control" th:field="*{email}" placeholder="Enter Email ID" required autofocus="autofocus"/>
+			            <input type="email" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$" id="email" class="form-control" th:field="*{email}" placeholder="Enter Email ID" required autofocus="autofocus"/>
 		            </div>
                     <div class="form-group">
 			            <label class="control-label" for="password"> Password </label>:
@@ -46,6 +66,6 @@
 			</div>
 		</div>	
 	</div> 
-	
+	<script type="text/javascript" th:src="@{/js/login.js}"></script>
 </body>
 </html>
